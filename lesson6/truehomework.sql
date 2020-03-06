@@ -26,7 +26,20 @@ UNION
   		FROM profiles 
   			WHERE sex = 'f'));
   		
- -- 4 Не выполнил
+ -- Решение препода
+ SELECT SUM(likes_per_user) AS likes_total FROM ( 
+  SELECT COUNT(*) AS likes_per_user 
+    FROM likes 
+      WHERE target_type_id = 2
+        AND target_id IN (
+          SELECT * FROM (
+            SELECT user_id FROM profiles ORDER BY birthday DESC LIMIT 10
+          ) AS sorted_profiles 
+        ) 
+      GROUP BY target_id
+) AS counted_likes;
+
+
   		
   	
 	
