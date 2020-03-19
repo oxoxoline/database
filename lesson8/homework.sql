@@ -60,7 +60,27 @@ ALTER TABLE communities_users
 	
 -- Не выполнил. Не до конца разобрался с обычным объединением, с JOIN ещё трудней стало. 
 
+-- Поситать общее кол-во лайков, которые получили 10 самых молодых поользователей.
+SELECT SUM(got_likes) AS total_likes_for_youngest
+	FROM (
+		SELECT COUNT(DISTINCT likes.id) AS got_likes
+			FROM profiles 
+				LEFT JOIN likes 
+					ON likes.target_id = profiles.user_id 
+						AND target_type_id = 2
+			GROUP BY profiles.user_id 
+			ORDER BY profiles.birthday DESC 
+			LIMIT 10
+) AS youngest;
 
+-- Определить кто больше поставил лайков мужчины или женщины?
+SELECT profiles.sex AS SEX,
+	COUNT(likes.id) AS total_likes
+		FROM likes
+		JOIN profiles 
+			ON likes.user_id = profiles.user_id 
+		GROUP BY profiles.sex ORDER BY total_likes DESC 
+		LIMIT 1;
 
 
 
